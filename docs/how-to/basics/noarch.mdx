@@ -293,6 +293,105 @@ about:
 Note that the example includes both Unix and Windows commands, even though normally it will only be built on Linux.
 This makes it easier to adapt for packages with platform-specific code.
 
+### Perl packages
+
+A typical `noarch` Perl recipe looks like the following:
+
+<RecipeTabs>
+
+```recipe
+{% set version = "2021.0814" %}
+
+package:
+  name: perl-text-tabs-wrap
+  version: {{ version }}
+
+source:
+  url: https://cpan.metacpan.org/authors/id/A/AR/ARISTOTLE/Text-Tabs+Wrap-{{ version }}.tar.gz
+  sha256: 30bbea13a5f5ef446b676b4493644df0ea19fc6a70ff649a8beb64571dbf6dfa
+
+build:
+  noarch: generic
+  number: 0
+  script:
+    - perl Makefile.PL INSTALLDIRS=vendor NO_PERLLOCAL=1 NO_PACKLIST=1
+    - make
+    - make test
+    - make install VERBINST=1
+
+requirements:
+  build:
+    - make
+  host:
+    - perl
+    - perl-extutils-makemaker
+  run:
+    - perl
+
+test:
+  imports:
+    - Text::Tabs
+    - Text::Wrap
+
+about:
+  home: https://metacpan.org/dist/Text-Tabs+Wrap
+  license: GPL-1.0-or-later OR Artistic-1.0-Perl
+  license_family: OTHER
+  summary: 'Expand tabs and do simple line wrapping'
+  license_file:
+    - {{ environ["PREFIX"] }}/man/man1/perlartistic.1
+    - {{ environ["PREFIX"] }}/man/man1/perlgpl.1
+```
+
+```recipe
+schema_version: 1
+
+context:
+  version: "2021.0814"
+
+package:
+  name: perl-text-tabs-wrap
+  version: ${{ version }}
+
+source:
+  url: https://cpan.metacpan.org/authors/id/A/AR/ARISTOTLE/Text-Tabs+Wrap-${{ version }}.tar.gz
+  sha256: 30bbea13a5f5ef446b676b4493644df0ea19fc6a70ff649a8beb64571dbf6dfa
+
+build:
+  number: 0
+  noarch: generic
+  script:
+    - perl Makefile.PL INSTALLDIRS=vendor NO_PERLLOCAL=1 NO_PACKLIST=1
+    - make
+    - make test
+    - make install VERBINST=1
+
+requirements:
+  build:
+    - make
+  host:
+    - perl
+    - perl-extutils-makemaker
+  run:
+    - perl
+
+tests:
+  - perl:
+      uses:
+        - Text::Tabs
+        - Text::Wrap
+
+about:
+  license: GPL-1.0-or-later OR Artistic-1.0-Perl
+  summary: Expand tabs and do simple line wrapping
+  license_file:
+    - ${{ PREFIX }}/man/man1/perlartistic.1
+    - ${{ PREFIX }}/man/man1/perlgpl.1
+  homepage: https://metacpan.org/dist/Text-Tabs+Wrap
+```
+
+</RecipeTabs>
+
 ### Further examples
 
 [Examples of recipes using `noarch: generic`](https://github.com/search?type=code&q=org%3Aconda-forge+path%3Arecipe+%22noarch%3A+generic%22+language%3AYAML&l=YAML)
