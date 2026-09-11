@@ -209,6 +209,8 @@ build:
   noarch: generic
   script: $R CMD INSTALL --build .         # [unix]
   script: "\"%R%\" CMD INSTALL --build ."  # [win]
+  script_env:
+    DISABLE_AUTOBREW: "1"
 
   rpaths:
     - lib/R/lib/
@@ -227,7 +229,7 @@ test:
 
 about:
   home: https://github.com/jonclayden/shades
-  license: BSD_3_clause
+  license: BSD-3-Clause
   summary: Functions for easily manipulating colours, creating colour scales and calculating colour distances.
   license_family: BSD
   license_file:
@@ -255,9 +257,12 @@ build:
   number: 0
   noarch: generic
   script:
-    - if: unix
-      then: $R CMD INSTALL --build .
-      else: "\"%R%\" CMD INSTALL --build ."
+    env:
+      DISABLE_AUTOBREW: "1"
+    content:
+      - if: unix
+        then: $R CMD INSTALL --build .
+        else: "\"%R%\" CMD INSTALL --build ."
   dynamic_linking:
     rpaths:
       - lib/R/lib/
